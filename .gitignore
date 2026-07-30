@@ -1,0 +1,43 @@
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+*.g.dart
+*.freezed.dart
+
+# Android build cache
+android/.gradle/
+
+# Android signing — NEVER commit these
+android/local.properties
+android/app/release.keystore
+android/app/*.jks
+android/app/*.keystore
+android/app/google-services.json
+
+# Environment / secrets
+lib/config/secrets.dart
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# macOS
+.DS_Store
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/App.framework
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/Generated.xcconfig
+ios/ServiceDefinitions.json
+**/xcuserdata/
+*.xcworkspace/xcuserdata/

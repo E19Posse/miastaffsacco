@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Production: only trust system CAs for the SACCO domain; no cleartext allowed -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">sacco.rinahaintl.com</domain>
+        <!--
+            Certificate pinning (SPKI SHA-256, base64).
+            Obtain the hash with:
+              openssl s_client -connect sacco.rinahaintl.com:443 </dev/null 2>/dev/null \
+                | openssl x509 -pubkey -noout \
+                | openssl pkey -pubin -outform DER \
+                | openssl dgst -sha256 -binary | base64
+            Update expiration and hash before each certificate renewal.
+            Add a backup pin (from the CA or next key) to avoid a locking yourself out.
+        -->
+        <pin-set expiration="2027-06-03">
+            <pin digest="SHA-256">5sB+2rLdY6UyZMMCSB2C+nP+r0HpsAiPWiTewAavz5w=</pin>
+        </pin-set>
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </domain-config>
+
+    <!-- Block all cleartext (HTTP) traffic globally -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+</network-security-config>

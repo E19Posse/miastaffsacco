@@ -1,0 +1,65 @@
+# MIA SACCO – Rocket.Chat development stack
+#
+# Usage:
+#   1. docker compose up -d
+#   2. Wait ~60 s for services to start
+#   3. Visit http://localhost:3000 to complete the setup wizard
+#   4. When prompted, create the admin account:
+#        Username : admin
+#        Password : Admin@MIA2024!
+#   5. Update RcConfig in lib/config/rc_config.dart if needed
+#
+# Rocket.Chat REST API: http://localhost:3000/api/v1
+# WebSocket:            ws://localhost:3000/websocket
+# Android emulator uses 10.0.2.2 instead of localhost
+
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mia_mongo
+    command: mongod --replSet rs0 --bind_ip_all
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - rc_net
+    restart: unless-stopped
+
+  mongo-init:
+    image: mongo:6
+    container_name: mia_mongo_init
+    depends_on:
+      - mongo
+    networks:
+      - rc_net
+    restart: on-failure
+    entrypoint: >
+      bash -c "
+        sleep 10 &&
+        mongosh --host mongo:27017 --eval 'rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"mongo:27017\"}]})'
+      "
+
+  rocketchat:
+    image: registry.rocket.chat/rocketchat/rocket.chat:7.0
+    container_name: mia_rocketchat
+    depends_on:
+      - mongo
+      - mongo-init
+    environment:
+      MONGO_URL: mongodb://mongo:27017/rocketchat?replicaSet=rs0
+      MONGO_OPLOG_URL: mongodb://mongo:27017/local?replicaSet=rs0
+      ROOT_URL: http://localhost:3000
+      PORT: 3000
+      DEPLOY_PLATFORM: docker
+    ports:
+      - "3000:3000"
+    networks:
+      - rc_net
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+
+networks:
+  rc_net:

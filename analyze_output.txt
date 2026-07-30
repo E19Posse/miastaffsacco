@@ -1,0 +1,41 @@
+﻿Analyzing lib...                                                
+
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\admin\impersonate_screen.dart:137:34 - deprecated_member_use
+warning - Unnecessary cast - lib\screens\checkoff\checkoff_screen.dart:40:79 - unnecessary_cast
+warning - The value of the local variable 'defAmount' isn't used - lib\screens\checkoff\checkoff_screen.dart:108:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\credit_score\credit_score_screen.dart:196:26 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\credit_score\credit_score_screen.dart:235:24 - deprecated_member_use
+warning - The value of the local variable 'c' isn't used - lib\screens\dividends\dividends_screen.dart:97:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\dividends\dividends_screen.dart:107:57 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\financial_health\financial_health_screen.dart:148:26 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\financial_health\financial_health_screen.dart:148:51 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\financial_health\financial_health_screen.dart:153:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\financial_health\financial_health_screen.dart:215:25 - deprecated_member_use
+warning - The value of the local variable 'c' isn't used - lib\screens\financial_health\financial_health_screen.dart:340:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\financial_health\financial_health_screen.dart:401:26 - deprecated_member_use
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\screens\fixed_deposits\fixed_deposits_screen.dart:308:13 - deprecated_member_use
+warning - The value of the local variable 'isDark' isn't used - lib\screens\home\home_screen.dart:727:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\loans\loan_reschedule_screen.dart:85:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\loans\loan_reschedule_screen.dart:87:58 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\loans\loan_reschedule_screen.dart:142:66 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\main_shell.dart:175:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\main_shell.dart:177:58 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\member\subscription_fee_screen.dart:168:76 - deprecated_member_use
+warning - The value of the local variable 'c' isn't used - lib\screens\payments\payment_gateway_screen.dart:374:11 - unused_local_variable
+warning - The value of the local variable 'isDark' isn't used - lib\screens\payments\payment_gateway_screen.dart:375:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\security\sessions_screen.dart:120:68 - deprecated_member_use
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\screens\settings\app_settings_screen.dart:467:13 - deprecated_member_use
+warning - Unnecessary cast - lib\screens\shared\payment_sheets.dart:444:22 - unnecessary_cast
+warning - Unnecessary cast - lib\screens\shared\payment_sheets.dart:454:32 - unnecessary_cast
+warning - The value of the local variable 'c' isn't used - lib\screens\shared\payment_sheets.dart:617:11 - unused_local_variable
+warning - The value of the local variable 'active' isn't used - lib\screens\support\support_screen.dart:408:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\transactions\receipt_screen.dart:128:51 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\transactions\receipt_screen.dart:134:38 - deprecated_member_use
+
+flutter : 31 issues found. (ran in 3.1s)
+At line:1 char:21
++ cd C:\bmcsacco_app; flutter analyze lib/ 2>&1 | Out-File -FilePath "C ...
++                     ~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (31 issues found. (ran in 3.1s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
