@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// Solid chip/background colour for a tier badge — gold uses the brand gold,
-/// bronze uses the distinct verification blue (not [AppColors.blue], which is
-/// aliased to gold elsewhere in the UI), basic uses neutral grey.
+/// Solid chip/background colour for a tier badge — gold uses [AppColors.tierGold]
+/// (a real gold/amber, independent of the app's blue UI accent), bronze uses
+/// the distinct verification blue, basic uses neutral grey.
 Color tierChipColor(String tier) => switch (tier) {
-  'gold'   => AppColors.gold,
+  'gold'   => AppColors.tierGold,
   'bronze' => AppColors.verifiedBlue,
   _        => const Color(0xFF9AA5B1),
 };

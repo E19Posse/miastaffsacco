@@ -12,8 +12,12 @@ class AppRadius {
 
 // ── Brand colours (same in every theme) ──────────────────────────────────────
 // Commercial fintech palette: royal-blue primary, sky-blue accent, neutral
-// cool-gray surfaces, with dedicated (brand-independent) green/red for
-// credit/debit and amber reserved for the "gold" member tier + warnings.
+// cool-gray surfaces, dedicated (brand-independent) green/red for credit/debit,
+// and amber reserved ONLY for the literal "gold" member-tier badge + warnings.
+// NOTE: [gold] is the app's single UI accent — used ~130+ places throughout
+// (focus borders, status pills, buttons, icons) — so its value IS the brand
+// accent colour, not a one-off. The literal gold-tier badge uses [tierGold]
+// instead so that specific meaning doesn't shift when the accent does.
 // NOTE: tinted/pastel backgrounds (solidTint below) are NOT an approved
 // pattern for new UI — the no-tinted-colors rule in UI_DESIGN_STYLE.md
 // applies here too. Use solid brand colors + onColor() for new work.
@@ -24,15 +28,16 @@ class AppColors {
   static const primaryDark= Color(0xFF1E3A8A); // navy
   static const primaryLight=Color(0xFFDBEAFE);
   static const emeraldMid = Color(0xFF2563EB); // --color-primary-mid
-  /// Single UI accent — focus rings, "blue" back-compat alias, highlights.
-  /// Kept separate from [gold], which is reserved for the literal gold
-  /// member-tier badge and must not shift when the brand accent changes.
-  static const accentSky  = Color(0xFF0EA5E9);
-  static const gold       = Color(0xFFCA8A04); // --color-gold (tier badge only)
+  /// App-wide UI accent (focus rings, status pills, buttons, icons, etc.).
+  static const gold       = Color(0xFF0EA5E9); // --color-accent (sky blue)
+  static const accentSky  = gold;              // explicit alias, same value
+  /// Gold member-tier badge ONLY (verification_badge.dart) — a real gold/amber,
+  /// deliberately independent of [gold]/[accentSky] above.
+  static const tierGold   = Color(0xFFCA8A04);
   static const danger     = Color(0xFFDC2626); // --color-danger
   /// Standard (non-gold-tier) verification badge colour — deliberately distinct
-  /// from [gold] so members below the gold credit-score threshold don't show
-  /// the same badge colour as gold-tier members.
+  /// from [tierGold] so members below the gold credit-score threshold don't
+  /// show the same badge colour as gold-tier members.
   static const verifiedBlue = Color(0xFF2F6FED);
   static const onDark     = Colors.white;       // text/icon on primary surfaces
 

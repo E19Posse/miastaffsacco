@@ -240,7 +240,7 @@ class _BalanceHeroCardState extends State<_BalanceHeroCard> {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
               Text('AVAILABLE BALANCE', style: TextStyle(
-                  color: AppColors.gold.withValues(alpha: 0.9),
+                  color: AppColors.accentSky.withValues(alpha: 0.9),
                   fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 2)),
               const SizedBox(width: 4),
               InkResponse(
@@ -290,7 +290,7 @@ class _BalanceHeroCardState extends State<_BalanceHeroCard> {
                 color: Colors.white.withValues(alpha: 0.5), fontSize: 9, fontWeight: FontWeight.w800, letterSpacing: 1)),
             Text(
                 dash.loading ? '—' : (_hidden ? 'UGX •••••' : 'UGX ${widget.fmt.format(dash.totalLoans)}'),
-                style: const TextStyle(color: AppColors.gold, fontSize: 13, fontWeight: FontWeight.w800)),
+                style: const TextStyle(color: AppColors.accentSky, fontSize: 13, fontWeight: FontWeight.w800)),
           ]),
         ]),
       ]),
@@ -521,7 +521,7 @@ class _ActionTile extends StatelessWidget {
     final c = context.colors;
     final bg = switch (tint) {
       _Tint.emerald => AppColors.emeraldMid,
-      _Tint.gold    => AppColors.gold,
+      _Tint.gold    => AppColors.accentSky,
       _Tint.soft    => AppColors.emeraldDeep,
     };
     return GestureDetector(
@@ -595,7 +595,7 @@ class _ActiveChallengeCardState extends State<_ActiveChallengeCard> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.gold,
+            color: AppColors.emeraldMid,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -908,7 +908,7 @@ class _SavingsGoalsCirclesState extends State<_SavingsGoalsCircles> {
     );
   }
 
-  static const _ringColors = [AppColors.gold, AppColors.emeraldMid, Color(0xFF4FA6FF)];
+  static const _ringColors = [AppColors.emeraldDeep, AppColors.emeraldMid, AppColors.accentSky];
 }
 
 class _GoalRing extends StatelessWidget {

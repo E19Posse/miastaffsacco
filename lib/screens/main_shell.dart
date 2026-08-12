@@ -170,10 +170,10 @@ class _MorphFabState extends State<_MorphFab>
         child: Container(
           width: 52, height: 52,
           decoration: const BoxDecoration(
-            color: AppColors.gold,
+            color: AppColors.accentSky,
             shape: BoxShape.circle,
           ),
-          child: const Icon(UniconsLine.plus, color: AppColors.emeraldDeep, size: 28),
+          child: const Icon(UniconsLine.plus, color: Colors.white, size: 28),
         ),
       ),
     );
@@ -194,7 +194,7 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final active = idx == current;
-    final color  = active ? AppColors.gold : AppColors.cream.withValues(alpha: 0.5);
+    final color  = active ? Colors.white : AppColors.cream.withValues(alpha: 0.5);
     return GestureDetector(
       onTap: () => onTap(idx),
       behavior: HitTestBehavior.opaque,
