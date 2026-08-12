@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 class LoanCollateralScreen extends StatefulWidget {
@@ -67,9 +68,9 @@ class _LoanCollateralScreenState extends State<LoanCollateralScreen> {
         ),
         Expanded(
           child: _loading
-              ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+              ? const LoadingStateView()
               : _error != null
-                  ? _ErrorView(message: _error!, onRetry: _load)
+                  ? ErrorStateView(message: _error, onRetry: _load)
                   : RefreshIndicator(
                       color: AppColors.emeraldDeep,
                       onRefresh: _load,
@@ -150,27 +151,3 @@ class _CollateralCard extends StatelessWidget {
   }
 }
 
-class _ErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-  const _ErrorView({required this.message, required this.onRetry});
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        const Icon(UniconsLine.info_circle, size: 48, color: AppColors.danger),
-        const SizedBox(height: 12),
-        Text(message,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: context.colors.textSecondary)),
-        const SizedBox(height: 16),
-        TextButton(
-          onPressed: onRetry,
-          child: const Text('Retry', style: TextStyle(color: AppColors.emeraldDeep)),
-        ),
-      ]),
-    ),
-  );
-}

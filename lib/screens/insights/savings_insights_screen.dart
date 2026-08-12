@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import '../../widgets/money_text.dart';
 import 'package:unicons/unicons.dart';
 
@@ -62,9 +63,9 @@ class _SavingsInsightsScreenState extends State<SavingsInsightsScreen> {
           child: RefreshIndicator(
             color: AppColors.emeraldDeep, backgroundColor: c.card, onRefresh: _load,
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                ? const LoadingStateView()
                 : _error != null
-                    ? ListView(children: [const SizedBox(height: 160), Center(child: Text(_error!, style: TextStyle(color: c.textSecondary)))])
+                    ? ErrorStateView(message: _error, onRetry: _load)
                     : _body(c),
           ),
         ),

@@ -1,9 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
+import '../support/new_support_ticket_screen.dart';
 import 'package:unicons/unicons.dart';
 
 class ImpersonateScreen extends StatefulWidget {
@@ -43,10 +46,23 @@ class _ImpersonateScreenState extends State<ImpersonateScreen> {
         _loading  = false;
       });
     } catch (e) {
-      if (mounted) setState(() {
-        _error   = ApiService.extractError(e);
-        _loading = false;
-      });
+      if (!mounted) return;
+      setState(() => _loading = false);
+      if (e is DioException && e.response?.statusCode == 403) {
+        AppDialogs.showAccessDenied(
+          context,
+          message: 'You no longer have permission to impersonate members.',
+          onRequestAccess: () => Navigator.push(context, MaterialPageRoute(
+            builder: (_) => const NewSupportTicketScreen(
+              initialCategory: 'account_access',
+              initialSubject: 'Requesting impersonation access',
+            ),
+          )),
+        );
+        Navigator.pop(context);
+        return;
+      }
+      setState(() => _error = ApiService.extractError(e));
     }
   }
 

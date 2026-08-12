@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 class CheckoffScreen extends StatefulWidget {
@@ -66,9 +67,9 @@ class _CheckoffScreenState extends State<CheckoffScreen> {
           ]),
         ),
         Expanded(child: _loading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+          ? const LoadingStateView()
           : _error != null
-              ? _ErrorView(message: _error!, onRetry: _load)
+              ? ErrorStateView(message: _error, onRetry: _load)
               : RefreshIndicator(
                   color: AppColors.emeraldDeep,
                   onRefresh: _load,
@@ -87,16 +88,11 @@ class _CheckoffScreenState extends State<CheckoffScreen> {
                               fontWeight: FontWeight.w700, fontSize: 15)),
                       const SizedBox(height: 12),
                       if (_records.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 32),
-                          child: Center(
-                            child: Column(mainAxisSize: MainAxisSize.min, children: [
-                              Icon(Icons.pie_chart_outline, size: 64, color: c.textHint),
-                              const SizedBox(height: 12),
-                              Text('No payroll deduction records found',
-                                  style: TextStyle(color: c.textSecondary, fontSize: 15),
-                                  textAlign: TextAlign.center),
-                            ]),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 32),
+                          child: EmptyStateView(
+                            title: 'No payroll deductions yet',
+                            icon: Icons.pie_chart_outline,
                           ),
                         )
                       else
@@ -295,27 +291,3 @@ class _Item extends StatelessWidget {
   );
 }
 
-class _ErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-  const _ErrorView({required this.message, required this.onRetry});
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        const Icon(UniconsLine.info_circle, size: 48, color: AppColors.danger),
-        const SizedBox(height: 12),
-        Text(message,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: context.colors.textSecondary)),
-        const SizedBox(height: 16),
-        TextButton(
-          onPressed: onRetry,
-          child: const Text('Retry', style: TextStyle(color: AppColors.emeraldDeep)),
-        ),
-      ]),
-    ),
-  );
-}

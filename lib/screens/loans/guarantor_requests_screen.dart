@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
+import '../../widgets/app_state_views.dart';
 import '../../widgets/money_text.dart';
 import 'package:unicons/unicons.dart';
 
@@ -48,8 +50,8 @@ class _GuarantorRequestsScreenState extends State<GuarantorRequestsScreen> {
         backgroundColor: action == 'accept' ? AppColors.emeraldMid : AppColors.gold));
       _load();
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger));
+      if (mounted) AppDialogs.handleActionError(context, e,
+          accessDeniedMessage: 'You don\'t have permission to respond to this request.');
     }
   }
 
@@ -119,9 +121,9 @@ class _GuarantorRequestsScreenState extends State<GuarantorRequestsScreen> {
             color: AppColors.emeraldDeep, backgroundColor: c.card,
             onRefresh: _load,
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                ? const LoadingStateView()
                 : _error != null
-                    ? _ErrorState(message: _error!, onRetry: _load)
+                    ? ErrorStateView(message: _error, onRetry: _load)
                     : _items.isEmpty
                         ? _EmptyState()
                         : ListView(
@@ -252,15 +254,3 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-class _ErrorState extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-  const _ErrorState({required this.message, required this.onRetry});
-  @override
-  Widget build(BuildContext context) => ListView(children: [
-    const SizedBox(height: 140),
-    const Icon(UniconsLine.exclamation_circle, size: 48, color: AppColors.danger),
-    const SizedBox(height: 12),
-    Center(child: TextButton(onPressed: onRetry, child: const Text('Retry', style: TextStyle(color: AppColors.emeraldDeep)))),
-  ]);
-}

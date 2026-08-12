@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../models/loan.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import 'loan_reschedule_screen.dart';
 import 'package:unicons/unicons.dart';
 
@@ -36,7 +37,7 @@ class _LoanScheduleScreenState extends State<LoanScheduleScreen> {
       final data = await _api.getLoanSchedule(widget.loan.id);
       setState(() => _schedule = List<Map<String, dynamic>>.from(data));
     } catch (e) {
-      setState(() => _error = e.toString());
+      setState(() => _error = ApiService.extractError(e));
     } finally {
       setState(() => _loading = false);
     }
@@ -89,29 +90,15 @@ class _LoanScheduleScreenState extends State<LoanScheduleScreen> {
           ),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                ? const LoadingStateView()
                 : _error != null
-                    ? _buildError(c)
+                    ? ErrorStateView(message: _error, onRetry: _load)
                     : _buildContent(c),
           ),
         ]),
       ),
     );
   }
-
-  Widget _buildError(AppColorScheme c) => Center(
-    child: Column(mainAxisSize: MainAxisSize.min, children: [
-      const Icon(UniconsLine.info_circle, color: AppColors.danger, size: 48),
-      const SizedBox(height: 12),
-      Text('Failed to load schedule',
-          style: TextStyle(color: c.textPrimary, fontWeight: FontWeight.w600)),
-      const SizedBox(height: 8),
-      TextButton(
-        onPressed: _load,
-        child: const Text('Retry', style: TextStyle(color: AppColors.emeraldDeep)),
-      ),
-    ]),
-  );
 
   Widget _buildContent(AppColorScheme c) {
     if (_schedule.isEmpty) {

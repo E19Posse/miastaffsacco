@@ -2,6 +2,12 @@ class ApiConstants {
   static const _prodUrl = 'https://sacco.rinahaintl.com/api/';
   static const baseUrl  = _prodUrl;
 
+  /// Google reCAPTCHA v3 site key. Supplied at build time via
+  /// --dart-define=RECAPTCHA_SITE_KEY=... — empty by default, which mirrors the
+  /// backend's `captcha.secret` graceful no-op (RegistrationService::verifyCaptcha):
+  /// registration works without a token until both sides are configured.
+  static const recaptchaSiteKey = String.fromEnvironment('RECAPTCHA_SITE_KEY', defaultValue: '');
+
   // Auth
   static const login  = '/login';
   static const logout = '/logout';

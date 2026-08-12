@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 class SessionsScreen extends StatefulWidget {
@@ -37,9 +39,8 @@ class _SessionsScreenState extends State<SessionsScreen> {
       await _load();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger),
-      );
+      AppDialogs.handleActionError(context, e,
+          accessDeniedMessage: 'You don\'t have permission to revoke this session.');
     }
   }
 
@@ -70,9 +71,8 @@ class _SessionsScreenState extends State<SessionsScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger),
-      );
+      AppDialogs.handleActionError(context, e,
+          accessDeniedMessage: 'You don\'t have permission to revoke sessions.');
     }
   }
 
@@ -109,14 +109,17 @@ class _SessionsScreenState extends State<SessionsScreen> {
           ),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                ? const LoadingStateView()
                 : _error != null
-                    ? Center(child: Text(_error!, style: TextStyle(color: c.textSecondary)))
+                    ? ErrorStateView(message: _error, onRetry: _load)
                     : RefreshIndicator(
                         color: AppColors.emeraldDeep,
                         onRefresh: _load,
                         child: _sessions.isEmpty
-                            ? Center(child: Text('No sessions found.', style: TextStyle(color: c.textHint)))
+                            ? const EmptyStateView(
+                                title: 'No active sessions',
+                                icon: UniconsLine.desktop,
+                              )
                             : ListView.separated(
                                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
                                 separatorBuilder: (_, __) => const SizedBox(height: 10),

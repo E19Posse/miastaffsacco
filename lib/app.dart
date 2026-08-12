@@ -12,6 +12,7 @@ import 'screens/pin/pin_lock_screen.dart';
 import 'screens/identity_verification/identity_verification_screen.dart';
 import 'services/pin_service.dart';
 import 'theme/app_theme.dart';
+import 'widgets/connectivity_banner.dart';
 import 'package:unicons/unicons.dart';
 
 GoRouter buildRouter(AuthProvider auth, {required bool showOnboarding}) =>
@@ -189,6 +190,7 @@ class _SaccoAppState extends State<SaccoApp> with WidgetsBindingObserver {
             child: Stack(
               children: [
                 child ?? const SizedBox(),
+                const Positioned(top: 0, left: 0, right: 0, child: ConnectivityBanner()),
                 if (_locked)
                   PinLockScreen(onUnlocked: () {
                     setState(() => _locked = false);

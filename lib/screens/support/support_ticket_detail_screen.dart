@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../models/support_ticket.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 class SupportTicketDetailScreen extends StatefulWidget {
@@ -128,9 +129,9 @@ class _SupportTicketDetailScreenState extends State<SupportTicketDetailScreen> {
           ),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                ? const LoadingStateView()
                 : _error != null
-                    ? _Error(message: _error!, onRetry: _load)
+                    ? ErrorStateView(message: _error, onRetry: _load)
                     : ticket == null
                         ? const SizedBox.shrink()
                         : RefreshIndicator(
@@ -286,18 +287,3 @@ class _ReplyBubble extends StatelessWidget {
   }
 }
 
-class _Error extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-  const _Error({required this.message, required this.onRetry});
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Column(mainAxisSize: MainAxisSize.min, children: [
-      const Icon(UniconsLine.info_circle, size: 48, color: AppColors.danger),
-      const SizedBox(height: 12),
-      Text('Failed to load', style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.w600)),
-      const SizedBox(height: 8),
-      TextButton(onPressed: onRetry, child: const Text('Retry', style: TextStyle(color: AppColors.emeraldDeep))),
-    ]),
-  );
-}

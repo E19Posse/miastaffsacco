@@ -22,6 +22,7 @@ import '../../services/api_service.dart';
 import '../../services/storage_service.dart';
 import '../../utils/feature_gate.dart';
 import '../../widgets/app_animations.dart';
+import '../../widgets/app_state_views.dart';
 import '../../widgets/money_text.dart';
 import '../../widgets/app_svg_icon.dart';
 import '../../widgets/transaction_pin_sheet.dart';
@@ -64,7 +65,12 @@ class _HomeScreenState extends State<HomeScreen> {
           duration: const Duration(milliseconds: 300),
           child: dash.loading
               ? KeyedSubtree(key: const ValueKey('loading'), child: _LoadingBody(c: c))
-              : KeyedSubtree(
+              : (dash.error != null && dash.savings.isEmpty && dash.loans.isEmpty && dash.transactions.isEmpty)
+                  ? KeyedSubtree(
+                      key: const ValueKey('error'),
+                      child: ErrorStateView(message: dash.error, onRetry: dash.refresh),
+                    )
+                  : KeyedSubtree(
                   key: const ValueKey('body'),
                   child: RefreshIndicator(
                     color: AppColors.emeraldDeep,

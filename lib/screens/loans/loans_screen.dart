@@ -6,6 +6,7 @@ import '../../models/loan.dart';
 import '../../providers/dashboard_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_animations.dart';
+import '../../widgets/app_state_views.dart';
 import 'loan_application_screen.dart';
 import 'loan_detail_screen.dart';
 import 'loan_collateral_screen.dart';
@@ -28,8 +29,10 @@ class LoansScreen extends StatelessWidget {
       backgroundColor: c.bg,
       body: SafeArea(
         child: dash.loading
-            ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
-            : RefreshIndicator(
+            ? const LoadingStateView()
+            : dash.error != null
+                ? ErrorStateView(message: dash.error, onRetry: dash.refresh)
+                : RefreshIndicator(
                 color: AppColors.emeraldDeep,
                 onRefresh: () => dash.refresh(),
                 child: ListView(
@@ -101,13 +104,13 @@ class LoansScreen extends StatelessWidget {
                     const SizedBox(height: 20),
 
                     if (dash.loans.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 48),
-                        child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                          AppSvgIcon(AppSvgIcons.loan, size: 56, color: c.textHint),
-                          const SizedBox(height: 12),
-                          Text('No loans found', style: TextStyle(color: c.textSecondary)),
-                        ])),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 32),
+                        child: EmptyStateView(
+                          title: 'No loans yet',
+                          message: 'Apply for a loan using the + button above.',
+                          icon: UniconsLine.receipt,
+                        ),
                       )
                     else
                       ...dash.loans.asMap().entries.map((e) => StaggerItem(

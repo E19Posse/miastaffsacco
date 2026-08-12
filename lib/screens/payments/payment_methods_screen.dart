@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -18,13 +20,18 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
   final _api = ApiService();
   List<dynamic> _accounts = [];
   bool _loading = true;
+  String? _error;
 
   @override
   void initState() { super.initState(); _load(); }
 
   Future<void> _load() async {
-    setState(() => _loading = true);
-    try { _accounts = await _api.getMomoAccounts(); } catch (_) {}
+    setState(() { _loading = true; _error = null; });
+    try {
+      _accounts = await _api.getMomoAccounts();
+    } catch (e) {
+      _error = ApiService.extractError(e);
+    }
     if (mounted) setState(() => _loading = false);
   }
 
@@ -58,8 +65,8 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
       await _api.deleteMomoAccount(acct['id'] as int);
       _load();
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger));
+      if (mounted) AppDialogs.handleActionError(context, e,
+          accessDeniedMessage: 'You don\'t have permission to remove this payment method.');
     }
   }
 
@@ -97,8 +104,10 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
           ),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
-                : RefreshIndicator(
+                ? const LoadingStateView()
+                : _error != null
+                    ? ErrorStateView(message: _error, onRetry: _load)
+                    : RefreshIndicator(
                     color: AppColors.emeraldDeep,
                     onRefresh: _load,
                     child: ListView(padding: const EdgeInsets.fromLTRB(20, 0, 20, 40), children: [
@@ -208,8 +217,7 @@ class _AddPaymentMethodSheetState extends State<_AddPaymentMethodSheet> {
       await _api.addMomoAccount(name: _name.text.trim(), phone: _phone.text.trim());
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger));
+      if (mounted) AppDialogs.handleActionError(context, e);
       if (mounted) setState(() => _busy = false);
     }
   }

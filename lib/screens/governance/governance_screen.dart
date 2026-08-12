@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 import '../../widgets/app_svg_icon.dart';
 
@@ -56,9 +58,8 @@ class _GovernanceScreenState extends State<GovernanceScreen>
       await _load();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(ApiService.extractError(e)),
-          backgroundColor: AppColors.danger));
+        AppDialogs.handleActionError(context, e,
+            accessDeniedMessage: 'You don\'t have permission to vote on this proposal.');
       }
     } finally {
       if (mounted) setState(() => _votingId = null);
@@ -104,9 +105,9 @@ class _GovernanceScreenState extends State<GovernanceScreen>
         ),
         Expanded(
           child: _loading
-              ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+              ? const LoadingStateView()
               : _error != null
-                  ? _ErrorState(error: _error!, onRetry: _load)
+                  ? ErrorStateView(message: _error, onRetry: _load)
                   : TabBarView(
                       controller: _tabs,
                       children: [
@@ -518,20 +519,3 @@ class _EmptyTab extends StatelessWidget {
   }
 }
 
-class _ErrorState extends StatelessWidget {
-  final String       error;
-  final VoidCallback onRetry;
-  const _ErrorState({required this.error, required this.onRetry});
-  @override
-  Widget build(BuildContext context) => Center(child: Padding(
-    padding: const EdgeInsets.all(40),
-    child: Column(mainAxisSize: MainAxisSize.min, children: [
-      const Icon(UniconsLine.exclamation_circle, size: 56, color: AppColors.danger),
-      const SizedBox(height: 12),
-      Text(error, textAlign: TextAlign.center,
-          style: TextStyle(color: context.colors.textSecondary)),
-      const SizedBox(height: 16),
-      TextButton(onPressed: onRetry, child: const Text('Retry')),
-    ]),
-  ));
-}

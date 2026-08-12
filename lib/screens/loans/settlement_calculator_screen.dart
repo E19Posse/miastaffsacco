@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
+import '../../widgets/app_state_views.dart';
 import '../payments/payment_gateway_screen.dart';
 import 'package:unicons/unicons.dart';
 
@@ -76,9 +78,9 @@ class _SettlementCalculatorScreenState extends State<SettlementCalculatorScreen>
           ),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                ? const LoadingStateView()
                 : _error != null
-                    ? _ErrorView(message: _error!, onRetry: _load)
+                    ? ErrorStateView(message: _error, onRetry: _load)
                     : _buildBody(c),
           ),
         ]),
@@ -255,8 +257,8 @@ class _SettlementCalculatorScreenState extends State<SettlementCalculatorScreen>
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(res['message']?.toString() ?? 'Top-up requested'), backgroundColor: AppColors.emeraldMid));
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger));
+      if (mounted) AppDialogs.handleActionError(context, e,
+          accessDeniedMessage: 'You don\'t have permission to request a top-up on this loan.');
     }
   }
 }
@@ -276,27 +278,3 @@ class _QuoteRow extends StatelessWidget {
   }
 }
 
-class _ErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-  const _ErrorView({required this.message, required this.onRetry});
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        const Icon(UniconsLine.info_circle, size: 48, color: AppColors.danger),
-        const SizedBox(height: 12),
-        Text(message,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: context.colors.textSecondary)),
-        const SizedBox(height: 16),
-        TextButton(
-          onPressed: onRetry,
-          child: const Text('Retry', style: TextStyle(color: AppColors.emeraldDeep)),
-        ),
-      ]),
-    ),
-  );
-}

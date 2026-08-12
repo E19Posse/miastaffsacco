@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/app_animations.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 class DividendsScreen extends StatefulWidget {
@@ -57,9 +57,9 @@ class _DividendsScreenState extends State<DividendsScreen> {
           ]),
         ),
         Expanded(child: _loading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+          ? const LoadingStateView()
           : _error != null
-              ? ShakeWidget(key: ValueKey(_error), child: Center(child: Text(_error!, style: TextStyle(color: c.textSecondary))))
+              ? ErrorStateView(message: _error, onRetry: _load)
               : RefreshIndicator(
                   color: AppColors.emeraldDeep,
                   onRefresh: _load,

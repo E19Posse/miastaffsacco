@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../models/savings_account.dart';
 import '../../providers/dashboard_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import '../goals/savings_goals_screen.dart';
 import 'open_savings_account_screen.dart';
 import 'package:unicons/unicons.dart';
@@ -30,8 +31,10 @@ class SavingsScreen extends StatelessWidget {
       backgroundColor: c.bg,
       body: SafeArea(
         child: dash.loading
-            ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
-            : RefreshIndicator(
+            ? const LoadingStateView()
+            : dash.error != null
+                ? ErrorStateView(message: dash.error, onRetry: dash.refresh)
+                : RefreshIndicator(
                 color: AppColors.emeraldDeep,
                 onRefresh: () => dash.refresh(),
                 child: ListView(
@@ -114,7 +117,14 @@ class SavingsScreen extends StatelessWidget {
                   ),
 
                   if (dash.savings.isEmpty)
-                    _empty(c)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 32),
+                      child: EmptyStateView(
+                        title: 'No savings accounts yet',
+                        message: 'Open your first account above to start saving.',
+                        icon: Icons.savings_outlined,
+                      ),
+                    )
                   else
                     ...dash.savings.map((a) => _AccountCard(acc: a, fmt: fmt)),
                 ],
@@ -123,18 +133,6 @@ class SavingsScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget _empty(AppColorScheme c) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 48),
-    child: Center(
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Icon(Icons.savings_outlined, size: 56, color: c.textHint),
-        const SizedBox(height: 12),
-        Text('No savings accounts found',
-            style: TextStyle(color: c.textSecondary)),
-      ]),
-    ),
-  );
 }
 
 class _HeroStat extends StatelessWidget {

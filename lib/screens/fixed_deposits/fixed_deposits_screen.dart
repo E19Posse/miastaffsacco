@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import '../../models/fixed_deposit.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 class FixedDepositsScreen extends StatefulWidget {
@@ -57,12 +59,8 @@ class _FixedDepositsScreenState extends State<FixedDepositsScreen> {
       // revert on error
       setState(() => _rolloverState[fdId] = !newValue);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(ApiService.extractError(e)),
-            backgroundColor: AppColors.danger,
-          ),
-        );
+        AppDialogs.handleActionError(context, e,
+            accessDeniedMessage: 'You don\'t have permission to change rollover on this deposit.');
       }
     }
   }
@@ -97,9 +95,9 @@ class _FixedDepositsScreenState extends State<FixedDepositsScreen> {
         backgroundColor: c.card,
         onRefresh: _load,
         child: _loading
-            ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+            ? const LoadingStateView()
             : _error != null
-                ? _ErrorView(message: _error!, onRetry: _load)
+                ? ErrorStateView(message: _error, onRetry: _load)
                 : _fds.isEmpty
                     ? _EmptyView()
                     : _FdList(
@@ -367,21 +365,3 @@ class _EmptyView extends StatelessWidget {
   );
 }
 
-class _ErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-  const _ErrorView({required this.message, required this.onRetry});
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Column(mainAxisSize: MainAxisSize.min, children: [
-      const Icon(UniconsLine.info_circle, size: 48, color: AppColors.danger),
-      const SizedBox(height: 12),
-      Text('Failed to load', style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.w600)),
-      const SizedBox(height: 6),
-      Text(message, textAlign: TextAlign.center,
-          style: TextStyle(color: context.colors.textSecondary, fontSize: 12)),
-      const SizedBox(height: 8),
-      TextButton(onPressed: onRetry, child: const Text('Retry', style: TextStyle(color: AppColors.emeraldDeep))),
-    ]),
-  );
-}

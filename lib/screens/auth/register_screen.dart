@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../services/api_service.dart';
+import '../../services/recaptcha_service.dart';
 import '../../theme/app_theme.dart';
 import '../legal/legal_content_screen.dart';
 import 'package:unicons/unicons.dart';
@@ -88,6 +89,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     setState(() => _busy = true);
     try {
+      // No-op (returns null) until RECAPTCHA_SITE_KEY is configured at build time —
+      // see RecaptchaService for the full activation steps.
+      final recaptchaToken = await RecaptchaService.getToken(context, action: 'register');
+      if (!mounted) return;
       final res = await _api.registerStart(
         name:             _nameCtrl.text.trim(),
         email:            _emailCtrl.text.trim(),
@@ -97,6 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         memberCategoryId: _categoryId!,
         password:         _passCtrl.text,
         referralCode:     _referralCtrl.text.trim(),
+        recaptchaToken:   recaptchaToken,
       );
       if (!mounted) return;
       setState(() {

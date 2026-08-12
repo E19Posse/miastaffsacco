@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 import '../payments/add_cash_flow.dart';
 
@@ -70,9 +72,9 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
           ]),
         ),
         Expanded(child: _loading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+          ? const LoadingStateView()
           : _error != null
-              ? _ErrorState(error: _error!, onRetry: _load)
+              ? ErrorStateView(message: _error, onRetry: _load)
               : _goals.isEmpty
                   ? _EmptyState(onAdd: () => _showAddGoalSheet(context))
                   : RefreshIndicator(
@@ -115,7 +117,8 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
       await _api.deleteGoal(id);
       _load();
     } catch (e) {
-      if (mounted) _showError(ApiService.extractError(e));
+      if (mounted) AppDialogs.handleActionError(context, e,
+          accessDeniedMessage: 'You don\'t have permission to delete this goal.');
     }
   }
 
@@ -518,24 +521,6 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-class _ErrorState extends StatelessWidget {
-  final String error;
-  final VoidCallback onRetry;
-  const _ErrorState({required this.error, required this.onRetry});
-  @override
-  Widget build(BuildContext context) => Center(child: Padding(
-    padding: const EdgeInsets.all(40),
-    child: Column(mainAxisSize: MainAxisSize.min, children: [
-      const Icon(UniconsLine.exclamation_circle, size: 56, color: AppColors.danger),
-      const SizedBox(height: 12),
-      Text(error, textAlign: TextAlign.center,
-          style: TextStyle(color: context.colors.textSecondary)),
-      const SizedBox(height: 16),
-      TextButton(onPressed: onRetry, child: const Text('Retry')),
-    ]),
-  ));
-}
-
 // ── Auto-save (recurring savings) sheet ───────────────────────────────────────
 
 class _AutoSaveSheet extends StatefulWidget {
@@ -590,8 +575,7 @@ class _AutoSaveSheetState extends State<_AutoSaveSheet> {
         backgroundColor: AppColors.emeraldMid));
       Navigator.pop(context, true);
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger));
+      if (mounted) AppDialogs.handleActionError(context, e);
       if (mounted) setState(() => _busy = false);
     }
   }
@@ -602,8 +586,7 @@ class _AutoSaveSheetState extends State<_AutoSaveSheet> {
       await widget.api.cancelGoalAuto(widget.goal['id'] as int);
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger));
+      if (mounted) AppDialogs.handleActionError(context, e);
       if (mounted) setState(() => _busy = false);
     }
   }

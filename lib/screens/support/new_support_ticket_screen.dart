@@ -5,7 +5,9 @@ import '../../theme/app_theme.dart';
 import 'package:unicons/unicons.dart';
 
 class NewSupportTicketScreen extends StatefulWidget {
-  const NewSupportTicketScreen({super.key});
+  final String? initialCategory;
+  final String? initialSubject;
+  const NewSupportTicketScreen({super.key, this.initialCategory, this.initialSubject});
   @override
   State<NewSupportTicketScreen> createState() => _NewSupportTicketScreenState();
 }
@@ -34,9 +36,15 @@ class _NewSupportTicketScreenState extends State<NewSupportTicketScreen> {
     'urgent': 'Urgent — blocking my access',
   };
 
-  String _category = 'other';
+  late String _category = widget.initialCategory ?? 'other';
   String _priority = 'medium';
   bool   _busy     = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialSubject != null) _subjectCtrl.text = widget.initialSubject!;
+  }
 
   @override
   void dispose() {

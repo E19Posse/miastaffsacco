@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../models/share_transaction.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import '../../widgets/money_text.dart';
 import 'package:unicons/unicons.dart';
 import '../payments/payment_gateway_screen.dart';
@@ -106,9 +107,9 @@ class _SharesScreenState extends State<SharesScreen> {
               backgroundColor: c.card,
               onRefresh: _load,
               child: _loading
-                  ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                  ? const LoadingStateView()
                   : _error != null
-                      ? _ErrorView(message: _error!, onRetry: _load)
+                      ? ErrorStateView(message: _error, onRetry: _load)
                       : _Body(
                           summary:  _summary,
                           requests: _requests,
@@ -788,22 +789,3 @@ class _BuySharesSheetState extends State<_BuySharesSheet> {
 
 // ── Error View ────────────────────────────────────────────────────────────────
 
-class _ErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-  const _ErrorView({required this.message, required this.onRetry});
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Column(mainAxisSize: MainAxisSize.min, children: [
-      const Icon(UniconsLine.info_circle, size: 48, color: AppColors.danger),
-      const SizedBox(height: 12),
-      Text('Failed to load', style: TextStyle(
-          color: context.colors.textPrimary, fontWeight: FontWeight.w600)),
-      const SizedBox(height: 8),
-      TextButton(
-        onPressed: onRetry,
-        child: const Text('Retry', style: TextStyle(color: AppColors.emeraldDeep)),
-      ),
-    ]),
-  );
-}

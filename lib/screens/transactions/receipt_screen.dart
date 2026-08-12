@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 class ReceiptScreen extends StatefulWidget {
@@ -89,9 +90,9 @@ This receipt is computer-generated.
           ),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                ? const LoadingStateView()
                 : _error != null
-                    ? Center(child: Text(_error!, style: TextStyle(color: c.textSecondary)))
+                    ? ErrorStateView(message: _error, onRetry: _load)
                     : SingleChildScrollView(
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
                         child: Column(children: [

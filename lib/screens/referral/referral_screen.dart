@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 class ReferralScreen extends StatefulWidget {
@@ -75,14 +76,9 @@ class _ReferralScreenState extends State<ReferralScreen> {
           ),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                ? const LoadingStateView()
                 : _error != null
-                    ? Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        Text(_error!, style: TextStyle(color: c.textSecondary)),
-                        const SizedBox(height: 12),
-                        TextButton(onPressed: _load,
-                            child: Text('Retry', style: TextStyle(color: c.textPrimary))),
-                      ]))
+                    ? ErrorStateView(message: _error, onRetry: _load)
                     : _buildBody(c),
           ),
         ]),

@@ -5,6 +5,7 @@ import '../../models/support_ticket.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_animations.dart';
+import '../../widgets/app_state_views.dart';
 import 'new_support_ticket_screen.dart';
 import 'support_ticket_detail_screen.dart';
 import 'package:unicons/unicons.dart';
@@ -98,11 +99,17 @@ class _SupportTicketsScreenState extends State<SupportTicketsScreen> {
               backgroundColor: c.card,
               onRefresh: _load,
               child: _loading
-                  ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                  ? const LoadingStateView()
                   : _error != null
-                      ? _Error(message: _error!, onRetry: _load)
+                      ? ErrorStateView(message: _error, onRetry: _load)
                       : _tickets.isEmpty
-                          ? _Empty(onNew: _openNewTicket)
+                          ? EmptyStateView(
+                              title: 'No Support Tickets',
+                              message: 'Raise a ticket and our team will get back to you.',
+                              icon: UniconsLine.headphones,
+                              actionLabel: 'New Ticket',
+                              onAction: _openNewTicket,
+                            )
                           : ListView(
                               padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
                               children: [
@@ -207,50 +214,3 @@ class _TicketCard extends StatelessWidget {
   }
 }
 
-class _Empty extends StatelessWidget {
-  final VoidCallback onNew;
-  const _Empty({required this.onNew});
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Column(mainAxisSize: MainAxisSize.min, children: [
-      Icon(UniconsLine.headphones, size: 64, color: context.colors.textHint),
-      const SizedBox(height: 16),
-      Text('No Support Tickets',
-          style: TextStyle(color: context.colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w700)),
-      const SizedBox(height: 8),
-      Text('Raise a ticket and our team will get back to you.',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: context.colors.textSecondary, fontSize: 13)),
-      const SizedBox(height: 20),
-      ElevatedButton.icon(
-        onPressed: onNew,
-        icon: const Icon(UniconsLine.plus, size: 18),
-        label: Text('New Ticket', style: GoogleFonts.sora(fontWeight: FontWeight.w800)),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.emeraldDeep,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          minimumSize: Size.zero,
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          shape: const StadiumBorder(),
-        ),
-      ),
-    ]),
-  );
-}
-
-class _Error extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-  const _Error({required this.message, required this.onRetry});
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Column(mainAxisSize: MainAxisSize.min, children: [
-      const Icon(UniconsLine.info_circle, size: 48, color: AppColors.danger),
-      const SizedBox(height: 12),
-      Text('Failed to load', style: TextStyle(color: context.colors.textPrimary, fontWeight: FontWeight.w600)),
-      const SizedBox(height: 8),
-      TextButton(onPressed: onRetry, child: const Text('Retry', style: TextStyle(color: AppColors.emeraldDeep))),
-    ]),
-  );
-}

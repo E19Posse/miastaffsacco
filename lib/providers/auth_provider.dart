@@ -247,8 +247,22 @@ class AuthProvider extends ChangeNotifier {
       await _store.saveAdminToken(adminToken);
       await _store.saveToken(token);
 
-      final data = await _api.getMe();
-      _member           = Member.fromJson(data['data'] ?? data);
+      final data   = await _api.getMe();
+      final member = Member.fromJson(data['data'] ?? data);
+
+      // The server must issue a token scoped to the requested userId — confirm
+      // it actually did before switching the app into that session. Without this,
+      // a server-side bug (or a race with another admin's impersonation request)
+      // could silently drop the admin into the wrong member's account.
+      if (member.id != userId) {
+        await _store.saveToken(adminToken);
+        await _store.clearAdminToken();
+        _error = 'Impersonation session mismatch — aborted for safety.';
+        notifyListeners();
+        return false;
+      }
+
+      _member           = member;
       _isImpersonating  = true;
       _impersonatedName = userName;
       notifyListeners();

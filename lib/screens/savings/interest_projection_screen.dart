@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 class InterestProjectionScreen extends StatefulWidget {
@@ -87,9 +88,9 @@ class _InterestProjectionScreenState extends State<InterestProjectionScreen> {
 
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                ? const LoadingStateView()
                 : _error != null
-                    ? Center(child: Text(_error!, style: TextStyle(color: c.textSecondary)))
+                    ? ErrorStateView(message: _error, onRetry: _load)
                     : _data == null
                         ? const SizedBox.shrink()
                         : _buildContent(c),

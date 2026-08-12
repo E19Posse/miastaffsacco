@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import '../../widgets/money_text.dart';
 import 'package:unicons/unicons.dart';
 import '../payments/payment_gateway_screen.dart';
@@ -113,15 +114,9 @@ class _SubscriptionFeeScreenState extends State<SubscriptionFeeScreen> {
           ),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                ? const LoadingStateView()
                 : _error != null && _status == null
-                    ? Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        const Icon(UniconsLine.exclamation_circle, size: 48, color: AppColors.danger),
-                        const SizedBox(height: 12),
-                        Text(_error!, style: TextStyle(color: c.textSecondary)),
-                        const SizedBox(height: 16),
-                        TextButton(onPressed: _load, child: const Text('Retry', style: TextStyle(color: AppColors.emeraldDeep))),
-                      ]))
+                    ? ErrorStateView(message: _error, onRetry: _load)
                     : SingleChildScrollView(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

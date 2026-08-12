@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
 import 'package:unicons/unicons.dart';
 
 class LoanApplicationScreen extends StatefulWidget {
@@ -106,7 +107,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
         duration: const Duration(seconds: 5),
       ));
     } catch (e) {
-      _snack(ApiService.extractError(e));
+      if (mounted) AppDialogs.handleActionError(context, e);
     }
     if (mounted) setState(() => _submitting = false);
   }

@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../../providers/dashboard_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
+import '../../widgets/app_state_views.dart';
 import '../../widgets/money_text.dart';
 import '../payments/add_cash_flow.dart' show WaitingConfirmationScreen;
 import '../payments/payment_methods_screen.dart';
@@ -32,6 +34,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   String _filter = 'all';
   List<dynamic> _items = [];
   bool _loading = true;
+  String? _error;
 
   final _filters = const {'all': 'All', 'started': 'Started', 'completed': 'Completed'};
 
@@ -39,8 +42,12 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   void initState() { super.initState(); _load(); }
 
   Future<void> _load() async {
-    setState(() => _loading = true);
-    try { _items = await _api.getChallenges(filter: _filter); } catch (_) {}
+    setState(() { _loading = true; _error = null; });
+    try {
+      _items = await _api.getChallenges(filter: _filter);
+    } catch (e) {
+      _error = ApiService.extractError(e);
+    }
     if (mounted) setState(() => _loading = false);
   }
 
@@ -105,10 +112,12 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
         ),
         Expanded(
           child: _loading
-              ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
-              : _items.isEmpty
-                  ? _empty(c)
-                  : RefreshIndicator(
+              ? const LoadingStateView()
+              : _error != null
+                  ? ErrorStateView(message: _error, onRetry: _load)
+                  : _items.isEmpty
+                      ? _empty(c)
+                      : RefreshIndicator(
                       color: AppColors.emeraldDeep, onRefresh: _load,
                       child: ListView.builder(
                         padding: const EdgeInsets.fromLTRB(20, 12, 20, 90),
@@ -251,8 +260,7 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
       );
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger));
+      if (mounted) AppDialogs.handleActionError(context, e);
       if (mounted) setState(() => _busy = false);
     }
   }
@@ -477,8 +485,8 @@ class _ChallengeDetailScreenState extends State<ChallengeDetailScreen> {
           builder: (_) => WaitingConfirmationScreen(reference: res['reference'].toString())));
       _load(); // refresh the grid (card may now be filled)
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger));
+      if (mounted) AppDialogs.handleActionError(context, e,
+          accessDeniedMessage: 'You don\'t have permission to pay into this challenge.');
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../providers/dashboard_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 import '../../widgets/app_svg_icon.dart';
 
@@ -143,14 +144,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+                ? const LoadingStateView()
                 : _error != null
-                    ? Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        Text(_error!, style: TextStyle(color: c.textSecondary)),
-                        const SizedBox(height: 12),
-                        TextButton(onPressed: _load,
-                            child: const Text('Retry', style: TextStyle(color: AppColors.emeraldMid))),
-                      ]))
+                    ? ErrorStateView(message: _error, onRetry: _load)
                     : total == 0
                         ? _empty()
                         : _buildList(),

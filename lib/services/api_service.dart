@@ -863,6 +863,7 @@ class ApiService {
     required int    memberCategoryId,
     required String password,
     String referralCode = '',
+    String? recaptchaToken,
   }) async {
     final res = await _dio.post(ApiConstants.registerStart, data: {
       'name':                  name,
@@ -874,6 +875,7 @@ class ApiService {
       'password':              password,
       'password_confirmation': password,
       if (referralCode.isNotEmpty) 'referral_code': referralCode,
+      if (recaptchaToken != null) 'recaptcha_token': recaptchaToken,
     });
     return (res.data as Map).cast<String, dynamic>();
   }

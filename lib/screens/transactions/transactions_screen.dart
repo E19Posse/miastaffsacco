@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../providers/dashboard_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 class TransactionsScreen extends StatefulWidget {
@@ -127,11 +128,20 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
           Expanded(
             child: dash.loading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
-                : txns.isEmpty
-                    ? Center(child: Text('No transactions found',
-                          style: TextStyle(color: c.textSecondary)))
-                    : ListView.separated(
+                ? const LoadingStateView()
+                : dash.error != null
+                    ? ErrorStateView(message: dash.error, onRetry: dash.refresh)
+                    : txns.isEmpty
+                        ? (_search.isNotEmpty
+                            ? NoSearchResultsStateView(
+                                query: _search,
+                                onClear: () => setState(() { _search = ''; _searchOpen = false; }))
+                            : const EmptyStateView(
+                                title: 'No transactions yet',
+                                message: 'Your deposits, withdrawals and repayments will show up here.',
+                                icon: UniconsLine.receipt,
+                              ))
+                        : ListView.separated(
                         key: ValueKey('$_filter|$_search'),
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
                         itemCount: txns.length,

@@ -68,6 +68,9 @@ dependencies:
   local_auth: ^2.3.0
   sentry_flutter: ^8.14.2
 
+  # Invisible reCAPTCHA v3 token capture for self-registration (see RecaptchaService)
+  webview_flutter: ^4.9.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

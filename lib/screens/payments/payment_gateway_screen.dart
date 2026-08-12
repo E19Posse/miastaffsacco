@@ -8,6 +8,7 @@ import '../../providers/dashboard_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
 import '../../widgets/transaction_pin_sheet.dart';
 import 'package:unicons/unicons.dart';
 
@@ -80,6 +81,7 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
   // Result after submission
   Map<String, dynamic>? _result;
   Timer? _pollTimer;
+  bool   _failedDialogShown = false;
 
   // Purposes that don't target a specific savings account / loan.
   bool get _isStandalone => _purpose == 'subscription_fee' || _purpose == 'share_purchase';
@@ -140,7 +142,7 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
       pin = entered;
     }
 
-    setState(() { _busy = true; _result = null; });
+    setState(() { _busy = true; _result = null; _failedDialogShown = false; });
 
     try {
       final res = await _api.initiateGatewayPayment(
@@ -160,10 +162,28 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
       // Mobile money: start polling every 5 s for the push-to-pay approval.
       _startPolling(res['reference'] as String);
     } catch (e) {
-      if (mounted) setState(() { _result = {'status': 'failed', 'message': ApiService.extractError(e)}; });
+      if (mounted) {
+        final msg = ApiService.extractError(e);
+        setState(() { _result = {'status': 'failed', 'message': msg}; });
+        _maybeShowFailedDialog(msg, null);
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+
+  /// Payment failures must be surfaced with a modal the member has to actively
+  /// dismiss — an inline red card alone is too easy to miss on a payment
+  /// screen, especially once they've navigated away and back mid-poll.
+  void _maybeShowFailedDialog(String message, String? reference) {
+    if (_failedDialogShown) return;
+    _failedDialogShown = true;
+    AppDialogs.showPaymentFailed(
+      context,
+      message: message,
+      reference: reference,
+      onRetry: () => setState(() { _result = null; }),
+    );
   }
 
   void _startPolling(String ref) {
@@ -178,6 +198,11 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
           _pollTimer?.cancel();
           if (s == 'completed') {
             context.read<DashboardProvider>().refresh();
+          } else {
+            _maybeShowFailedDialog(
+              _result?['message'] as String? ?? _result?['failure_reason'] as String? ?? 'Payment could not be completed.',
+              _result?['reference'] as String?,
+            );
           }
         }
       } catch (_) {}
@@ -380,8 +405,14 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
                   final s = await _api.checkPaymentStatus(ref);
                   if (!mounted) return;
                   setState(() => _result = {...?_result, ...s});
-                  if ((s['status'] as String?) == 'completed') {
+                  final status = s['status'] as String?;
+                  if (status == 'completed') {
                     context.read<DashboardProvider>().refresh();
+                  } else if (status == 'failed' || status == 'reversed') {
+                    _maybeShowFailedDialog(
+                      _result?['message'] as String? ?? _result?['failure_reason'] as String? ?? 'Payment could not be completed.',
+                      ref,
+                    );
                   }
                 } catch (e) { _snack(ApiService.extractError(e)); }
                 if (mounted) setState(() => _busy = false);

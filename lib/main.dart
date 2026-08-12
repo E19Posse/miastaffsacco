@@ -18,16 +18,27 @@ const String _sentryDsn = String.fromEnvironment('SENTRY_DSN', defaultValue: '')
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  // A missing/broken native Firebase config (e.g. no GoogleService-Info.plist
+  // on iOS) must not hard-crash the app before it ever reaches the login
+  // screen — degrade to no crash reporting / push instead, same as the
+  // no-op fallback in FirebaseService.init().
+  bool firebaseReady = true;
+  try {
+    await Firebase.initializeApp();
+  } catch (_) {
+    firebaseReady = false;
+  }
 
-  // Route all Flutter framework errors to Crashlytics
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  if (firebaseReady) {
+    // Route all Flutter framework errors to Crashlytics
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-  // Route uncaught async/platform errors to Crashlytics
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+    // Route uncaught async/platform errors to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+  }
 
   // Replace the default red error screen with a plain message in release
   if (kReleaseMode) {

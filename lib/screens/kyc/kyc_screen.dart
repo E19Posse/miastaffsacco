@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../models/kyc_document.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
 import '../../widgets/step_progress.dart';
 import 'face_scan_screen.dart';
 import 'selfie_intro_screen.dart';
@@ -93,7 +94,8 @@ class _KycScreenState extends State<KycScreen> {
       await _api.deleteKycDocument(doc.id);
       _load();
     } catch (e) {
-      if (mounted) _snack(ApiService.extractError(e));
+      if (mounted) AppDialogs.handleActionError(context, e,
+          accessDeniedMessage: 'You don\'t have permission to remove this document.');
     }
   }
 

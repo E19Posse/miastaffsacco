@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_dialogs.dart';
+import '../../widgets/app_state_views.dart';
 import 'package:unicons/unicons.dart';
 
 /// Member-managed beneficiaries / next-of-kin. Each has a name, relationship,
@@ -67,8 +69,8 @@ class _BeneficiariesScreenState extends State<BeneficiariesScreen> {
       await _api.deleteBeneficiary(b['id'] as int);
       _load();
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger));
+      if (mounted) AppDialogs.handleActionError(context, e,
+          accessDeniedMessage: 'You don\'t have permission to remove this beneficiary.');
     }
   }
 
@@ -105,9 +107,9 @@ class _BeneficiariesScreenState extends State<BeneficiariesScreen> {
         Expanded(child: RefreshIndicator(
         color: AppColors.emeraldDeep, backgroundColor: c.card, onRefresh: _load,
         child: _loading
-            ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
+            ? const LoadingStateView()
             : _error != null
-                ? ListView(children: [const SizedBox(height: 160), Center(child: Text(_error!, style: TextStyle(color: c.textSecondary)))])
+                ? ErrorStateView(message: _error, onRetry: _load)
                 : ListView(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
                     children: [
@@ -128,15 +130,15 @@ class _BeneficiariesScreenState extends State<BeneficiariesScreen> {
                       const SizedBox(height: 16),
                       if (_items.isEmpty)
                         Padding(
-                          padding: const EdgeInsets.only(top: 60),
-                          child: Column(children: [
-                            Icon(UniconsLine.users_alt, size: 56, color: c.textHint),
-                            const SizedBox(height: 12),
-                            Text('No beneficiaries yet', style: TextStyle(color: c.textPrimary, fontWeight: FontWeight.w700, fontSize: 16)),
-                            const SizedBox(height: 6),
-                            Text('Add your next-of-kin so your savings, shares and deposits\ncan be paid out correctly.',
-                                textAlign: TextAlign.center, style: TextStyle(color: c.textSecondary, fontSize: 13)),
-                          ]),
+                          padding: const EdgeInsets.only(top: 40),
+                          child: EmptyStateView(
+                            title: 'No beneficiaries yet',
+                            message: 'Add your next-of-kin so your savings, shares and deposits '
+                                'can be paid out correctly.',
+                            icon: UniconsLine.users_alt,
+                            actionLabel: 'Add Beneficiary',
+                            onAction: () => _edit(),
+                          ),
                         )
                       else
                         ..._items.map((e) {
@@ -255,8 +257,7 @@ class _BeneficiarySheetState extends State<_BeneficiarySheet> {
       }, id: widget.existing?['id'] as int?);
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(ApiService.extractError(e)), backgroundColor: AppColors.danger));
+      if (mounted) AppDialogs.handleActionError(context, e);
       if (mounted) setState(() => _busy = false);
     }
   }
