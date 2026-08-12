@@ -232,7 +232,7 @@ class _BalanceHeroCardState extends State<_BalanceHeroCard> {
     return Container(
       padding: const EdgeInsets.all(26),
       decoration: BoxDecoration(
-        color: AppColors.emeraldDeep,
+        color: AppColors.navy,
         borderRadius: BorderRadius.circular(32),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -521,7 +521,7 @@ class _ActionTile extends StatelessWidget {
     final c = context.colors;
     final bg = switch (tint) {
       _Tint.emerald => AppColors.emeraldMid,
-      _Tint.gold    => AppColors.accentSky,
+      _Tint.gold    => AppColors.navy,
       _Tint.soft    => AppColors.emeraldDeep,
     };
     return GestureDetector(
@@ -898,7 +898,7 @@ class _SavingsGoalsCirclesState extends State<_SavingsGoalsCircles> {
             for (var i = 0; i < shown.length; i++) ...[
               _GoalLegendRow(
                 goal: shown[i] as Map<String, dynamic>,
-                color: _ringColors[i % _ringColors.length],
+                color: _legendTextColors[i % _legendTextColors.length],
               ),
               if (i != shown.length - 1) const SizedBox(height: 12),
             ],
@@ -908,7 +908,12 @@ class _SavingsGoalsCirclesState extends State<_SavingsGoalsCircles> {
     );
   }
 
-  static const _ringColors = [AppColors.emeraldDeep, AppColors.emeraldMid, AppColors.accentSky];
+  // Multicolored using the full Chipper Cash palette: Purple Heart, Aero
+  // Blue mint, and Cloud Burst navy — maximally distinct hues per goal ring.
+  static const _ringColors = [AppColors.emeraldDeep, AppColors.accentSky, AppColors.navy];
+  // Legend amount text needs to stay readable on a white card — Aero Blue mint
+  // is too pale for text, so its slot borrows navy instead of the pale ring hue.
+  static const _legendTextColors = [AppColors.emeraldDeep, AppColors.navy, AppColors.navy];
 }
 
 class _GoalRing extends StatelessWidget {

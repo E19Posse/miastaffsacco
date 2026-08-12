@@ -11,28 +11,32 @@ class AppRadius {
 }
 
 // ── Brand colours (same in every theme) ──────────────────────────────────────
-// Commercial fintech palette: royal-blue primary, sky-blue accent, neutral
-// cool-gray surfaces, dedicated (brand-independent) green/red for credit/debit,
-// and amber reserved ONLY for the literal "gold" member-tier badge + warnings.
-// NOTE: [gold] is the app's single UI accent — used ~130+ places throughout
-// (focus borders, status pills, buttons, icons) — so its value IS the brand
-// accent colour, not a one-off. The literal gold-tier badge uses [tierGold]
-// instead so that specific meaning doesn't shift when the accent does.
+// Chipper Cash–style palette: Purple Heart primary (buttons/icons/interactive
+// — used ~60+ places app-wide, so its value IS the brand's dominant colour),
+// Cloud Burst deep navy reserved for structural dark surfaces (hero/balance
+// card, bottom nav — [navy]), Aero Blue mint as the single UI accent, White
+// page background. Brand-independent green/red still used for credit/debit,
+// and amber reserved ONLY for the literal "gold" member-tier badge + warnings
+// — neither is part of this palette swap.
 // NOTE: tinted/pastel backgrounds (solidTint below) are NOT an approved
 // pattern for new UI — the no-tinted-colors rule in UI_DESIGN_STYLE.md
 // applies here too. Use solid brand colors + onColor() for new work.
 class AppColors {
-  static const cream      = Color(0xFFF8FAFC); // --color-cream (page bg)
-  static const creamSoft  = Color(0xFFF1F5F9); // --color-cream-soft
-  static const emeraldDeep= Color(0xFF1D4ED8); // --color-primary (royal blue)
-  static const primaryDark= Color(0xFF1E3A8A); // navy
-  static const primaryLight=Color(0xFFDBEAFE);
-  static const emeraldMid = Color(0xFF2563EB); // --color-primary-mid
-  /// App-wide UI accent (focus rings, status pills, buttons, icons, etc.).
-  static const gold       = Color(0xFF0EA5E9); // --color-accent (sky blue)
+  static const cream      = Color(0xFFFFFFFF); // White — page bg
+  static const creamSoft  = Color(0xFFF3F1FC); // soft lavender-white — card-alt
+  static const emeraldDeep= Color(0xFF6945D8); // Purple Heart — primary/interactive
+  static const primaryDark= Color(0xFF202654); // Cloud Burst — dark variant
+  static const primaryLight=Color(0xFFE8E1FB);
+  static const emeraldMid = Color(0xFF7C5AE0); // lighter Purple Heart — secondary accent
+  /// App-wide UI accent (focus rings, status pills, labels, badges).
+  static const gold       = Color(0xFFACFCE3); // Aero Blue (mint)
   static const accentSky  = gold;              // explicit alias, same value
+  /// Cloud Burst deep navy — dedicated structural surface (hero/balance card,
+  /// bottom nav) so it stays visually distinct from [emeraldDeep]'s
+  /// interactive/button role even though both derive from the same brand ask.
+  static const navy       = primaryDark;
   /// Gold member-tier badge ONLY (verification_badge.dart) — a real gold/amber,
-  /// deliberately independent of [gold]/[accentSky] above.
+  /// deliberately independent of the Chipper Cash accent above.
   static const tierGold   = Color(0xFFCA8A04);
   static const danger     = Color(0xFFDC2626); // --color-danger
   /// Standard (non-gold-tier) verification badge colour — deliberately distinct
@@ -95,28 +99,28 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
   final Color borderActive;
 
   static const dark = AppColorScheme(
-    bg:           Color(0xFF0B1220),
-    surface:      Color(0xFF141B2D),
-    card:         Color(0xFF1B2436),
-    cardAlt:      Color(0xFF212C42),
+    bg:           Color(0xFF202654), // Cloud Burst
+    surface:      Color(0xFF262C60),
+    card:         Color(0xFF2D336E),
+    cardAlt:      Color(0xFF343A78),
     textPrimary:  Color(0xFFFFFFFF),
-    textSecondary:Color(0xFF9AA5B1),
-    textHint:     Color(0xFF616D7E),
-    border:       Color(0xFF2A3550),
-    borderActive: Color(0xFF2563EB), // primary-mid
+    textSecondary:Color(0xFFACFCE3), // Aero Blue
+    textHint:     Color(0xFF8B90B8),
+    border:       Color(0xFF3B4180),
+    borderActive: Color(0xFFACFCE3), // Aero Blue
   );
 
   // Matches styles.css :root exactly: --background/--foreground/--card/--border.
   static const light = AppColorScheme(
-    bg:           Color(0xFFF8FAFC), // --background (cool near-white)
+    bg:           Color(0xFFFFFFFF), // --background (White)
     surface:      Color(0xFFFFFFFF), // --card
     card:         Color(0xFFFFFFFF),
-    cardAlt:      Color(0xFFF1F5F9), // cream-soft
-    textPrimary:  Color(0xFF0F172A), // --foreground (slate)
-    textSecondary:Color(0x990F172A), // --muted-foreground (slate @ 60%)
-    textHint:     Color(0x660F172A), // slate @ 40%
-    border:       Color(0x1A0F172A), // --border (slate @ 10%)
-    borderActive: Color(0xFF1D4ED8),
+    cardAlt:      Color(0xFFF3F1FC), // cream-soft (lavender-white)
+    textPrimary:  Color(0xFF202654), // --foreground (Cloud Burst)
+    textSecondary:Color(0x99202654), // --muted-foreground (Cloud Burst @ 60%)
+    textHint:     Color(0x66202654), // Cloud Burst @ 40%
+    border:       Color(0x1A202654), // --border (Cloud Burst @ 10%)
+    borderActive: Color(0xFF6945D8), // Purple Heart
   );
 
   @override
@@ -189,13 +193,13 @@ class AppTheme {
         secondary: AppColors.accentSky,
         error:     AppColors.danger,
         onPrimary: Colors.white,
-        onSurface: Color(0xFF0F172A),
+        onSurface: Color(0xFF202654),
       ),
       // Sora for headings/display text, Manrope for body — matches the
       // reference's --font-display / --font-body.
       textTheme: GoogleFonts.manropeTextTheme(base.textTheme).apply(
-        bodyColor:    const Color(0xFF0F172A),
-        displayColor: const Color(0xFF0F172A),
+        bodyColor:    const Color(0xFF202654),
+        displayColor: const Color(0xFF202654),
       ).copyWith(
         displayLarge:  GoogleFonts.sora(fontWeight: FontWeight.w800),
         displayMedium: GoogleFonts.sora(fontWeight: FontWeight.w800),
@@ -266,11 +270,11 @@ class AppTheme {
     return base.copyWith(
       scaffoldBackgroundColor: AppColorScheme.dark.bg,
       colorScheme: const ColorScheme.dark(
-        surface:   Color(0xFF1E1E1E),
+        surface:   Color(0xFF262C60),
         primary:   AppColors.emeraldMid,
         secondary: AppColors.accentSky,
         error:     AppColors.danger,
-        onPrimary: Colors.black,
+        onPrimary: Colors.white,
         onSurface: Color(0xFFFFFFFF),
       ),
       textTheme: GoogleFonts.manropeTextTheme(base.textTheme).apply(
@@ -321,7 +325,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.emeraldMid,
-          foregroundColor: Colors.black,
+          foregroundColor: Colors.white,
           minimumSize: const Size(double.infinity, 54),
           shape: const StadiumBorder(),
           textStyle: GoogleFonts.sora(fontSize: 16, fontWeight: FontWeight.w800),

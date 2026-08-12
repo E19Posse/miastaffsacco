@@ -46,10 +46,10 @@ class _MainShellState extends State<MainShell> {
         child: Container(
           height: 64,
           decoration: BoxDecoration(
-            color: AppColors.emeraldDeep,
+            color: AppColors.navy,
             borderRadius: BorderRadius.circular(32),
             boxShadow: [BoxShadow(
-              color: AppColors.emeraldDeep.withValues(alpha: 0.35),
+              color: AppColors.navy.withValues(alpha: 0.35),
               blurRadius: 20, offset: const Offset(0, 8),
             )],
           ),
@@ -173,7 +173,7 @@ class _MorphFabState extends State<_MorphFab>
             color: AppColors.accentSky,
             shape: BoxShape.circle,
           ),
-          child: const Icon(UniconsLine.plus, color: Colors.white, size: 28),
+          child: const Icon(UniconsLine.plus, color: AppColors.navy, size: 28),
         ),
       ),
     );
