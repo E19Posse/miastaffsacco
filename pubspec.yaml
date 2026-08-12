@@ -39,7 +39,7 @@ dependencies:
 
   # Live camera + ML Kit for KYC facial scan
   camera: ^0.10.5+9
-  google_mlkit_face_detection: ^0.11.0
+  google_mlkit_face_detection: ^0.14.0
 
   # Device info & permissions
   device_info_plus: ^10.1.0
