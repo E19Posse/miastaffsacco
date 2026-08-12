@@ -11,37 +11,41 @@ class AppRadius {
 }
 
 // ── Brand colours (same in every theme) ──────────────────────────────────────
-// MIA Staff SACCO design-system palette (per the "Complete Design Prompt" spec):
-// deep emerald primary, amber gold accent, literal credit/debit greens/reds.
+// Commercial fintech palette: royal-blue primary, sky-blue accent, neutral
+// cool-gray surfaces, with dedicated (brand-independent) green/red for
+// credit/debit and amber reserved for the "gold" member tier + warnings.
 // NOTE: tinted/pastel backgrounds (solidTint below) are NOT an approved
 // pattern for new UI — the no-tinted-colors rule in UI_DESIGN_STYLE.md
 // applies here too. Use solid brand colors + onColor() for new work.
 class AppColors {
-  static const cream      = Color(0xFFF5F0E0); // --color-cream (page bg)
-  static const creamSoft  = Color(0xFFFAF6EA); // --color-cream-soft
-  static const emeraldDeep= Color(0xFF064E3B); // --color-emerald-deep (primary)
-  static const primaryDark= Color(0xFF043D2F);
-  static const primaryLight=Color(0xFFD1FAE5);
-  static const emeraldMid = Color(0xFF0D7A5F); // --color-emerald-mid
-  static const gold       = Color(0xFFC9A84C); // --color-gold
-  static const danger     = Color(0xFFB91C1C); // --color-danger
+  static const cream      = Color(0xFFF8FAFC); // --color-cream (page bg)
+  static const creamSoft  = Color(0xFFF1F5F9); // --color-cream-soft
+  static const emeraldDeep= Color(0xFF1D4ED8); // --color-primary (royal blue)
+  static const primaryDark= Color(0xFF1E3A8A); // navy
+  static const primaryLight=Color(0xFFDBEAFE);
+  static const emeraldMid = Color(0xFF2563EB); // --color-primary-mid
+  /// Single UI accent — focus rings, "blue" back-compat alias, highlights.
+  /// Kept separate from [gold], which is reserved for the literal gold
+  /// member-tier badge and must not shift when the brand accent changes.
+  static const accentSky  = Color(0xFF0EA5E9);
+  static const gold       = Color(0xFFCA8A04); // --color-gold (tier badge only)
+  static const danger     = Color(0xFFDC2626); // --color-danger
   /// Standard (non-gold-tier) verification badge colour — deliberately distinct
   /// from [gold] so members below the gold credit-score threshold don't show
-  /// the same badge colour as gold-tier members. NOT the same as [blue] below,
-  /// which is a back-compat alias onto gold used throughout the rest of the UI.
+  /// the same badge colour as gold-tier members.
   static const verifiedBlue = Color(0xFF2F6FED);
-  static const onDark     = Colors.white;       // text/icon on emerald-deep surfaces
+  static const onDark     = Colors.white;       // text/icon on primary surfaces
 
   // Back-compat aliases (kept so existing call sites don't all need renaming
-  // in one pass): primary/primaryDk/blue/error map onto the new brand roles.
+  // in one pass): primary/primaryDk/blue/success/error map onto brand roles.
   static const primary   = emeraldDeep;
   static const primaryDk = primaryDark;
-  static const blue      = gold;
-  static const blueSoft  = gold;
-  static const success   = emeraldMid; // credit
-  static const warning   = gold;
-  static const error     = danger;     // debit
-  static const purple    = emeraldMid;
+  static const blue      = accentSky;
+  static const blueSoft  = accentSky;
+  static const success   = Color(0xFF16A34A); // credit — brand-independent green
+  static const warning   = Color(0xFFF59E0B);
+  static const error     = danger;             // debit
+  static const purple    = accentSky;
 
   /// Alpha-blended tint backgrounds, used directly for badges/icon tiles/chips.
   static final emeraldTint = emeraldMid.withValues(alpha: 0.15);
@@ -86,28 +90,28 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
   final Color borderActive;
 
   static const dark = AppColorScheme(
-    bg:           Color(0xFF121212),
-    surface:      Color(0xFF1E1E1E),
-    card:         Color(0xFF252525),
-    cardAlt:      Color(0xFF2C2C2C),
+    bg:           Color(0xFF0B1220),
+    surface:      Color(0xFF141B2D),
+    card:         Color(0xFF1B2436),
+    cardAlt:      Color(0xFF212C42),
     textPrimary:  Color(0xFFFFFFFF),
-    textSecondary:Color(0xFF9E9E9E),
-    textHint:     Color(0xFF616161),
-    border:       Color(0xFF333333),
-    borderActive: Color(0xFF0D7A5F), // emerald-mid
+    textSecondary:Color(0xFF9AA5B1),
+    textHint:     Color(0xFF616D7E),
+    border:       Color(0xFF2A3550),
+    borderActive: Color(0xFF2563EB), // primary-mid
   );
 
   // Matches styles.css :root exactly: --background/--foreground/--card/--border.
   static const light = AppColorScheme(
-    bg:           Color(0xFFF5F0E0), // --background (cream)
+    bg:           Color(0xFFF8FAFC), // --background (cool near-white)
     surface:      Color(0xFFFFFFFF), // --card
     card:         Color(0xFFFFFFFF),
-    cardAlt:      Color(0xFFFAF6EA), // cream-soft
-    textPrimary:  Color(0xFF064E3B), // --foreground (emerald-deep)
-    textSecondary:Color(0x99064E3B), // --muted-foreground (emerald-deep @ 60%)
-    textHint:     Color(0x66064E3B), // emerald-deep @ 40%
-    border:       Color(0x1A064E3B), // --border (emerald-deep @ 10%)
-    borderActive: Color(0xFF064E3B),
+    cardAlt:      Color(0xFFF1F5F9), // cream-soft
+    textPrimary:  Color(0xFF0F172A), // --foreground (slate)
+    textSecondary:Color(0x990F172A), // --muted-foreground (slate @ 60%)
+    textHint:     Color(0x660F172A), // slate @ 40%
+    border:       Color(0x1A0F172A), // --border (slate @ 10%)
+    borderActive: Color(0xFF1D4ED8),
   );
 
   @override
@@ -177,16 +181,16 @@ class AppTheme {
       colorScheme: const ColorScheme.light(
         surface:   Color(0xFFFFFFFF),
         primary:   AppColors.emeraldDeep,
-        secondary: AppColors.gold,
+        secondary: AppColors.accentSky,
         error:     AppColors.danger,
         onPrimary: Colors.white,
-        onSurface: Color(0xFF064E3B),
+        onSurface: Color(0xFF0F172A),
       ),
       // Sora for headings/display text, Manrope for body — matches the
       // reference's --font-display / --font-body.
       textTheme: GoogleFonts.manropeTextTheme(base.textTheme).apply(
-        bodyColor:    const Color(0xFF064E3B),
-        displayColor: const Color(0xFF064E3B),
+        bodyColor:    const Color(0xFF0F172A),
+        displayColor: const Color(0xFF0F172A),
       ).copyWith(
         displayLarge:  GoogleFonts.sora(fontWeight: FontWeight.w800),
         displayMedium: GoogleFonts.sora(fontWeight: FontWeight.w800),
@@ -225,7 +229,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.lg),
-          borderSide: const BorderSide(color: AppColors.gold, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.accentSky, width: 1.5),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       ),
@@ -259,7 +263,7 @@ class AppTheme {
       colorScheme: const ColorScheme.dark(
         surface:   Color(0xFF1E1E1E),
         primary:   AppColors.emeraldMid,
-        secondary: AppColors.gold,
+        secondary: AppColors.accentSky,
         error:     AppColors.danger,
         onPrimary: Colors.black,
         onSurface: Color(0xFFFFFFFF),
@@ -305,7 +309,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.lg),
-          borderSide: const BorderSide(color: AppColors.gold, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.accentSky, width: 1.5),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       ),

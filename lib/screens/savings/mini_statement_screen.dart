@@ -211,7 +211,7 @@ class _TxnTile extends StatelessWidget {
     final ref    = data['reference']?.toString() ?? data['reference_number']?.toString() ?? '—';
     final date   = data['date']?.toString() ?? '—';
     final isCredit = !isLoan && (data['is_credit'] as bool? ?? false);
-    final color  = isLoan ? AppColors.gold : (isCredit ? AppColors.emeraldMid : AppColors.gold);
+    final color  = isLoan ? AppColors.gold : (isCredit ? AppColors.success : AppColors.error);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -241,7 +241,7 @@ class _TxnTile extends StatelessWidget {
         Text(
           '${isLoan ? '-' : (isCredit ? '+' : '-')} UGX ${fmt.format(amt)}',
           style: TextStyle(
-            color: isLoan ? AppColors.danger : (isCredit ? AppColors.emeraldMid : AppColors.gold),
+            color: isLoan ? AppColors.danger : (isCredit ? AppColors.success : AppColors.error),
             fontWeight: FontWeight.w700, fontSize: 13,
           ),
         ),

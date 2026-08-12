@@ -159,7 +159,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                               Container(
                                 width: 44, height: 44,
                                 decoration: BoxDecoration(
-                                  color: t.isCredit ? AppColors.emeraldMid : AppColors.gold,
+                                  color: t.isCredit ? AppColors.success : AppColors.error,
                                   shape: BoxShape.circle,
                                 ),
                                 alignment: Alignment.center,
@@ -187,7 +187,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                 Text(
                                   '${t.isCredit ? '+' : '–'} ${fmt.format(t.amount)}',
                                   style: GoogleFonts.sora(
-                                    color: t.isCredit ? AppColors.emeraldMid : AppColors.emeraldDeep,
+                                    color: t.isCredit ? AppColors.success : AppColors.error,
                                     fontWeight: FontWeight.w800, fontSize: 13,
                                   ),
                                 ),
