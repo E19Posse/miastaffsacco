@@ -462,7 +462,7 @@ class MoreScreen extends StatelessWidget {
       tile(_ServiceTile(
         icon: UniconsLine.signout,
         label: 'Sign Out',
-        sub: 'Log out of your MIA Staff SACCO account',
+        sub: 'Log out of your TMI Staff SACCO account',
         color: AppColors.error,
         onTap: () => _confirmSignOut(context),
       )),

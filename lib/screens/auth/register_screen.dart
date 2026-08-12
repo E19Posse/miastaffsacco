@@ -202,7 +202,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       const SizedBox(height: 8),
       Icon(UniconsLine.user_plus, size: 52, color: AppColors.primary),
       const SizedBox(height: 16),
-      Text('Join MIA Staff SACCO',
+      Text('Join TMI Staff SACCO',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: c.textPrimary)),
       const SizedBox(height: 8),
       Text('Create your member account. We\'ll verify your email and phone.',

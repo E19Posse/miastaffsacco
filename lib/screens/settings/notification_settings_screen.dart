@@ -77,7 +77,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
             child: _loading
                 ? const Center(child: CircularProgressIndicator(color: AppColors.emeraldDeep))
                 : ListView(padding: const EdgeInsets.fromLTRB(20, 0, 20, 32), children: [
-                    Text('Choose how MIA Staff SACCO reaches you. Security alerts are always sent.',
+                    Text('Choose how TMI Staff SACCO reaches you. Security alerts are always sent.',
                         style: TextStyle(color: c.textSecondary, fontSize: 13, height: 1.4)),
                     const SizedBox(height: 20),
                     _toggle(c, 'Push', 'In-app and device push notifications', _push,

@@ -167,7 +167,7 @@ class _SaccoAppState extends State<SaccoApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDark;
     return MaterialApp.router(
-      title: 'MIA Staff SACCO',
+      title: 'TMI Staff SACCO',
       debugShowCheckedModeBanner: false,
       theme:      AppTheme.light,
       darkTheme:  AppTheme.dark,

@@ -33,7 +33,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
 
   Future<void> _tryBiometric() async {
     final ok = await BiometricService.authenticate(
-      reason: 'Verify your identity to unlock MIA Staff SACCO',
+      reason: 'Verify your identity to unlock TMI Staff SACCO',
     );
     if (ok && mounted) widget.onUnlocked();
   }
@@ -76,7 +76,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
             child: const Icon(UniconsLine.lock, size: 36, color: Colors.white),
           ),
           const SizedBox(height: 20),
-          Text('MIA Staff SACCO',
+          Text('TMI Staff SACCO',
               style: TextStyle(
                   color: c.textPrimary, fontSize: 22, fontWeight: FontWeight.w800)),
           const SizedBox(height: 6),

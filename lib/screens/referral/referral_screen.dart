@@ -42,8 +42,8 @@ class _ReferralScreenState extends State<ReferralScreen> {
 
   void _share(String code) {
     Share.share(
-      'Join MIA Staff SACCO and start saving smarter!\n\nUse my referral code: $code when registering.\n\nDownload the app and sign up today.',
-      subject: 'Join MIA Staff SACCO',
+      'Join TMI Staff SACCO and start saving smarter!\n\nUse my referral code: $code when registering.\n\nDownload the app and sign up today.',
+      subject: 'Join TMI Staff SACCO',
     );
   }
 
@@ -188,7 +188,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                   color: c.textPrimary, fontWeight: FontWeight.w700, fontSize: 15)),
               const SizedBox(height: 12),
               _StepRow('1', 'Share your referral code with a friend', c),
-              _StepRow('2', 'They join MIA Staff SACCO using your code', c),
+              _StepRow('2', 'They join TMI Staff SACCO using your code', c),
               _StepRow('3',
                   rewardEach > 0
                       ? 'You earn UGX ${_fmt.format(rewardEach)} once they pay their subscription'

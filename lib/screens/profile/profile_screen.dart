@@ -121,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         content: Column(mainAxisSize: MainAxisSize.min, children: [
           Image.asset('assets/images/logo.png', width: 72, height: 72),
           const SizedBox(height: 16),
-          Text('MIA Staff SACCO',
+          Text('TMI Staff SACCO',
               style: TextStyle(
                   color: c.textPrimary,
                   fontSize: 20, fontWeight: FontWeight.w800)),
@@ -134,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _AboutRow('Version', '${info.version} (${info.buildNumber})', c),
           _AboutRow('Package', info.packageName, c),
           const SizedBox(height: 8),
-          Text('© ${DateTime.now().year} MIA Staff SACCO',
+          Text('© ${DateTime.now().year} TMI Staff SACCO',
               style: TextStyle(color: c.textHint, fontSize: 11)),
         ]),
         actions: [
@@ -445,7 +445,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             _MenuItem(
               icon: UniconsLine.info_circle,
-              label: 'About MIA Staff SACCO',
+              label: 'About TMI Staff SACCO',
               onTap: _openAbout,
             ),
           ]),

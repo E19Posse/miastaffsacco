@@ -46,7 +46,7 @@ class _MiniStatementScreenState extends State<MiniStatementScreen> {
   void _share() {
     if (_data == null) return;
     final buf = StringBuffer();
-    buf.writeln('MIA Staff SACCO — Mini Statement');
+    buf.writeln('TMI Staff SACCO — Mini Statement');
     buf.writeln('Generated: ${DateFormat('dd MMM yyyy HH:mm').format(DateTime.now())}');
     buf.writeln('─' * 40);
 
@@ -73,7 +73,7 @@ class _MiniStatementScreenState extends State<MiniStatementScreen> {
     }
 
     buf.writeln('─' * 40);
-    Share.share(buf.toString(), subject: 'MIA Staff SACCO Mini Statement');
+    Share.share(buf.toString(), subject: 'TMI Staff SACCO Mini Statement');
   }
 
   @override

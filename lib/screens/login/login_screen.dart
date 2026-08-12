@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _biometricLogin() async {
     setState(() => _busy = true);
-    final ok = await BiometricService.authenticate(reason: 'Sign in to MIA Staff SACCO');
+    final ok = await BiometricService.authenticate(reason: 'Sign in to TMI Staff SACCO');
     if (!mounted) return;
 
     if (!ok) {
@@ -237,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Image.asset('assets/images/logo.png', width: 44, height: 44, fit: BoxFit.cover),
                 ),
                 const SizedBox(width: 10),
-                Text('MIA Staff SACCO', style: GoogleFonts.sora(
+                Text('TMI Staff SACCO', style: GoogleFonts.sora(
                     fontSize: 20, fontWeight: FontWeight.w800, color: c.textPrimary)),
               ]),
               const SizedBox(height: 40),
@@ -375,7 +375,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 40),
               Center(
-                child: Text('Copyright © MIA Staff SACCO 2026 · V4.0',
+                child: Text('Copyright © TMI Staff SACCO 2026 · V4.0',
                     style: TextStyle(color: c.textSecondary,
                         fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1.2)),
               ),
